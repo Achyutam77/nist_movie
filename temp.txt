@@ -1,0 +1,9 @@
+users	User (custom user model extending AbstractUser)
+
+
+
+
+movies	Movie, Genre
+ratings	Rating
+watch	WatchHistory, Favorite
+recommendations

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Movie</title>
+  </head>
+  <body>
+    <h1>Create New Movie</h1>
+
+    <form method="Post">
+      {% csrf_token %} {% for field in form %}
+
+      <div>{{field.label}} {{field}}</div>
+      {% endfor %}
+
+      <button type="submit">Submmit</button>
+    </form>
+  </body>
+</html>
