@@ -20,4 +20,5 @@ class Movie(models.Model):
     cover_image_url = models.URLField()
     trailer_url = models.URLField()
     video_url = models.URLField()
+    is_trending = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now=True)

@@ -1,0 +1,289 @@
+{% extends "base.html" %} {% block title %} My Watchlist - MovieHub {% endblock title %} {% block content %}
+<!-- Watchlist Header -->
+<div class="bg-gradient-to-r from-purple-900/50 to-pink-900/50 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-4xl font-bold text-white mb-2">My Watchlist</h1>
+        <p class="text-gray-300">Movies you want to watch later</p>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-bold text-purple-400">12</div>
+        <div class="text-gray-400">Movies Saved</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Watchlist Controls -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div
+    class="flex flex-col md:flex-row md:justify-between md:items-center mb-8"
+  >
+    <div class="flex items-center space-x-4 mb-4 md:mb-0">
+      <h2 class="text-xl font-semibold text-white">Saved Movies</h2>
+      <span class="bg-purple-600 text-white text-sm px-3 py-1 rounded-full"
+        >12 items</span
+      >
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <!-- View Toggle -->
+      <div class="flex bg-gray-700 rounded-lg p-1">
+        <button class="bg-purple-600 text-white px-3 py-1 rounded text-sm">
+          <i class="fas fa-th"></i> Grid
+        </button>
+        <button
+          class="text-gray-400 hover:text-white px-3 py-1 rounded text-sm"
+        >
+          <i class="fas fa-list"></i> List
+        </button>
+      </div>
+
+      <!-- Sort Options -->
+      <select
+        class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+      >
+        <option>Recently Added</option>
+        <option>Title A-Z</option>
+        <option>Title Z-A</option>
+        <option>Release Date</option>
+        <option>Rating</option>
+      </select>
+
+      <!-- Clear All -->
+      <button
+        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300"
+      >
+        <i class="fas fa-trash mr-2"></i> Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Watchlist Grid -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 mb-8"
+  >
+    {% for i in "123456789012" %}
+    <div
+      class="watchlist-item bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group relative"
+    >
+      <!-- Remove Button -->
+      <button
+        class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-10"
+      >
+        <i class="fas fa-times text-sm"></i>
+      </button>
+
+      <!-- Movie Poster -->
+      <div class="relative">
+        <div
+          class="h-64 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center"
+        >
+          <i class="fas fa-film text-4xl text-white"></i>
+        </div>
+
+        <!-- Added Date Badge -->
+        <div
+          class="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full"
+        >
+          Jan {{ i }}
+        </div>
+
+        <!-- Priority Badge -->
+        {% if i == "1" or i == "2" or i == "5" %}
+        <div
+          class="absolute bottom-2 left-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded-full font-bold"
+        >
+          High Priority
+        </div>
+        {% endif %}
+
+        <!-- Play Overlay -->
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition duration-300 flex items-center justify-center"
+        >
+          <button
+            class="bg-white/20 backdrop-blur-sm text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition duration-300 hover:bg-white/30"
+          >
+            <i class="fas fa-play"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Movie Info -->
+      <div class="p-4">
+        <h3 class="text-white font-semibold mb-1 truncate">
+          Watchlist Movie {{ i }}
+        </h3>
+        <div
+          class="flex items-center justify-between text-sm text-gray-400 mb-2"
+        >
+          <span>2024</span>
+          <span>⭐ 8.{{ i }}</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span
+            class="bg-purple-600/20 text-purple-300 text-xs px-2 py-1 rounded-full"
+            >Action</span
+          >
+          <button
+            class="text-gray-400 hover:text-purple-400 transition duration-300"
+          >
+            <i class="fas fa-info-circle"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty State (Hidden when items exist) -->
+  <div class="text-center py-16 hidden" id="emptyState">
+    <i class="fas fa-bookmark text-6xl text-gray-600 mb-4"></i>
+    <h3 class="text-xl font-semibold text-gray-400 mb-2">
+      Your watchlist is empty
+    </h3>
+    <p class="text-gray-500 mb-6">
+      Start adding movies you want to watch later
+    </p>
+    <a
+      href="#"
+      class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 inline-flex items-center"
+    >
+      <i class="fas fa-search mr-2"></i> Browse Movies
+    </a>
+  </div>
+</div>
+
+<!-- Watchlist Categories -->
+<div class="bg-gray-800/50 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl font-bold text-white mb-8">Organize Your Watchlist</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Want to Watch -->
+      <div class="bg-gray-800 rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-white">Want to Watch</h3>
+          <span class="bg-blue-600 text-white text-sm px-2 py-1 rounded-full"
+            >8</span
+          >
+        </div>
+        <p class="text-gray-400 text-sm mb-4">
+          Movies you're planning to watch soon
+        </p>
+        <div class="space-y-2">
+          {% for i in "123" %}
+          <div class="flex items-center space-x-3 p-2 bg-gray-700 rounded-lg">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded flex items-center justify-center"
+            >
+              <i class="fas fa-film text-white text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-white text-sm font-medium">
+                Movie Title {{ i }}
+              </div>
+              <div class="text-gray-400 text-xs">Added 2 days ago</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Watching -->
+      <div class="bg-gray-800 rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-white">Currently Watching</h3>
+          <span class="bg-green-600 text-white text-sm px-2 py-1 rounded-full"
+            >2</span
+          >
+        </div>
+        <p class="text-gray-400 text-sm mb-4">
+          Movies you're currently watching
+        </p>
+        <div class="space-y-2">
+          {% for i in "12" %}
+          <div class="flex items-center space-x-3 p-2 bg-gray-700 rounded-lg">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded flex items-center justify-center"
+            >
+              <i class="fas fa-play text-white text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-white text-sm font-medium">Watching {{ i }}</div>
+              <div class="text-green-400 text-xs">65% complete</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Maybe Later -->
+      <div class="bg-gray-800 rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-white">Maybe Later</h3>
+          <span class="bg-yellow-600 text-white text-sm px-2 py-1 rounded-full"
+            >2</span
+          >
+        </div>
+        <p class="text-gray-400 text-sm mb-4">Movies you might watch someday</p>
+        <div class="space-y-2">
+          {% for i in "12" %}
+          <div class="flex items-center space-x-3 p-2 bg-gray-700 rounded-lg">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded flex items-center justify-center"
+            >
+              <i class="fas fa-clock text-white text-sm"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-white text-sm font-medium">
+                Maybe Movie {{ i }}
+              </div>
+              <div class="text-gray-400 text-xs">Low priority</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div
+    class="bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl p-6"
+  >
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+      <div class="mb-4 md:mb-0">
+        <h3 class="text-xl font-semibold text-white mb-2">Quick Actions</h3>
+        <p class="text-gray-400">Manage your watchlist efficiently</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <button
+          class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+        >
+          <i class="fas fa-random mr-2"></i> Shuffle
+        </button>
+        <button
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+        >
+          <i class="fas fa-sort mr-2"></i> Sort by Rating
+        </button>
+        <button
+          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+        >
+          <i class="fas fa-share mr-2"></i> Share List
+        </button>
+        <button
+          class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+        >
+          <i class="fas fa-download mr-2"></i> Export
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,20 +1,159 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Movie</title>
-  </head>
-  <body>
-    <h1>Create New Movie</h1>
+{% extends "base.html" %} 
 
-    <form method="Post">
-      {% csrf_token %} {% for field in form %}
+{% block title %} 
+Add New Movie - MovieHub
+{% endblock title %} 
 
-      <div>{{field.label}} {{field}}</div>
-      {% endfor %}
+{% block content %}
+<div class="min-h-screen py-12">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-4">
+        <i class="fas fa-plus-circle text-purple-500 mr-3"></i>
+        Add New Movie
+      </h1>
+      <p class="text-gray-400 text-lg">Share your favorite movie with the community</p>
+    </div>
 
-      <button type="submit">Submmit</button>
-    </form>
-  </body>
-</html>
+    <!-- Form Container -->
+    <div class="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+      <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-6">
+        <h2 class="text-2xl font-semibold text-white flex items-center">
+          <i class="fas fa-film mr-3"></i>
+          Movie Information
+        </h2>
+      </div>
+      
+      <form method="POST" class="p-8 space-y-6">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {% for field in form %}
+            <div class="{% if field.name == 'description' %}md:col-span-2{% endif %}">
+              <label class="block text-sm font-medium text-gray-300 mb-2">
+                {% if field.name == 'title' %}
+                  <i class="fas fa-heading mr-2 text-purple-400"></i>
+                {% elif field.name == 'genre' %}
+                  <i class="fas fa-tags mr-2 text-purple-400"></i>
+                {% elif field.name == 'description' %}
+                  <i class="fas fa-align-left mr-2 text-purple-400"></i>
+                {% elif field.name == 'release_year' %}
+                  <i class="fas fa-calendar mr-2 text-purple-400"></i>
+                {% elif field.name == 'duration_minutes' %}
+                  <i class="fas fa-clock mr-2 text-purple-400"></i>
+                {% elif field.name == 'language' %}
+                  <i class="fas fa-globe mr-2 text-purple-400"></i>
+                {% elif field.name == 'cover_image_url' %}
+                  <i class="fas fa-image mr-2 text-purple-400"></i>
+                {% elif field.name == 'trailer_url' %}
+                  <i class="fas fa-play mr-2 text-purple-400"></i>
+                {% elif field.name == 'video_url' %}
+                  <i class="fas fa-film mr-2 text-purple-400"></i>
+                {% else %}
+                  <i class="fas fa-info-circle mr-2 text-purple-400"></i>
+                {% endif %}
+                {{ field.label }}
+              </label>
+              
+              {% if field.name == 'description' %}
+                <textarea name="{{ field.name }}" 
+                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 resize-none h-32"
+                         placeholder="Enter a compelling description of the movie..."
+                         {% if field.value %}value="{{ field.value }}"{% endif %}>{% if field.value %}{{ field.value }}{% endif %}</textarea>
+              {% elif field.name == 'genre' %}
+                <select name="{{ field.name }}" 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300">
+                  {% for choice in field.field.queryset %}
+                    <option value="{{ choice.pk }}" {% if field.value == choice.pk %}selected{% endif %}>
+                      {{ choice.name }}
+                    </option>
+                  {% endfor %}
+                </select>
+              {% elif field.name == 'language' %}
+                <select name="{{ field.name }}" 
+                        class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300">
+                  {% for choice in field.field.choices %}
+                    <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                      {{ choice.1 }}
+                    </option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                {% if field.name == 'title' %}
+                  <input type="text" name="{{ field.name }}" value="{{ field.value|default:'' }}"
+                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                         placeholder="e.g., The Dark Knight">
+                {% elif field.name == 'release_year' %}
+                  <input type="number" name="{{ field.name }}" value="{{ field.value|default:'' }}"
+                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                         placeholder="e.g., 2008" min="1900" max="2025">
+                {% elif field.name == 'duration_minutes' %}
+                  <input type="number" name="{{ field.name }}" value="{{ field.value|default:'' }}"
+                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                         placeholder="e.g., 152" min="1">
+                {% elif 'url' in field.name %}
+                  <input type="url" name="{{ field.name }}" value="{{ field.value|default:'' }}"
+                         class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                         placeholder="https://example.com/{{ field.name|cut:'_' }}">
+                {% else %}
+                  {{ field }}
+                {% endif %}
+              {% endif %}
+              
+              {% if field.errors %}
+                <div class="mt-1 text-red-400 text-sm">
+                  {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-700">
+          <button type="submit" 
+                  class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center text-lg">
+            <i class="fas fa-save mr-2"></i>
+            Add Movie
+          </button>
+          
+          <a href="{% url 'home' %}" 
+             class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center text-lg">
+            <i class="fas fa-times mr-2"></i>
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-8 bg-gray-800/50 rounded-xl p-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+        <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>
+        Tips for Adding Movies
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300 text-sm">
+        <div class="flex items-start space-x-2">
+          <i class="fas fa-check text-green-400 mt-1"></i>
+          <span>Use high-quality poster images for better presentation</span>
+        </div>
+        <div class="flex items-start space-x-2">
+          <i class="fas fa-check text-green-400 mt-1"></i>
+          <span>Include YouTube links for trailers when possible</span>
+        </div>
+        <div class="flex items-start space-x-2">
+          <i class="fas fa-check text-green-400 mt-1"></i>
+          <span>Write engaging descriptions to attract viewers</span>
+        </div>
+        <div class="flex items-start space-x-2">
+          <i class="fas fa-check text-green-400 mt-1"></i>
+          <span>Double-check release year and duration for accuracy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

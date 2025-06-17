@@ -1,14 +1,182 @@
-<html>
-  <head> </head>
-  <body>
-    <form method="POST">
-      {% csrf_token %}
-      <label> Username</label>
-      <input type="text" name="username" required />
-      <label>Password</label>
-      <input type="password" name="password" required />
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - MovieHub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 min-h-screen flex items-center justify-center">
+    <div class="absolute inset-0 gradient-bg opacity-10"></div>
 
-      <button type="submit">Login</button>
-    </form>
+    <div class="relative z-10 max-w-md w-full mx-4">
+      <!-- Logo Section -->
+      <div class="text-center mb-8">
+        <div class="flex justify-center items-center space-x-2 mb-4">
+          <i class="fas fa-film text-4xl text-purple-500"></i>
+          <span class="text-3xl font-bold text-white">MovieHub</span>
+        </div>
+        <p class="text-gray-400">
+          Welcome back! Please sign in to your account
+        </p>
+      </div>
+
+      <!-- Login Form -->
+      <div class="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-6">
+          <h2 class="text-2xl font-semibold text-white text-center">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Sign In
+          </h2>
+        </div>
+
+        <form method="POST" class="p-8 space-y-6">
+          {% csrf_token %}
+
+          <!-- Username Field -->
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              <i class="fas fa-user mr-2 text-purple-400"></i>
+              Username
+            </label>
+            <input
+              type="text"
+              name="username"
+              required
+              class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              <i class="fas fa-lock mr-2 text-purple-400"></i>
+              Password
+            </label>
+            <div class="relative">
+              <input
+                type="password"
+                name="password"
+                required
+                id="password"
+                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                placeholder="Enter your password"
+              />
+              <button
+                type="button"
+                onclick="togglePassword()"
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition duration-300"
+              >
+                <i class="fas fa-eye" id="eyeIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="flex items-center justify-between">
+            <label class="flex items-center">
+              <input type="checkbox" class="sr-only" />
+              <div class="relative">
+                <div
+                  class="w-4 h-4 bg-gray-600 border border-gray-500 rounded"
+                ></div>
+              </div>
+              <span class="ml-2 text-sm text-gray-300">Remember me</span>
+            </label>
+            <a
+              href="#"
+              class="text-sm text-purple-400 hover:text-purple-300 transition duration-300"
+            >
+              Forgot password?
+            </a>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center text-lg"
+          >
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            Sign In
+          </button>
+        </form>
+
+        <!-- Sign Up Link -->
+        <div class="px-8 pb-8 text-center">
+          <p class="text-gray-400">
+            Don't have an account?
+            <a
+              href="#"
+              class="text-purple-400 hover:text-purple-300 font-medium transition duration-300"
+            >
+              Sign up here
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+        <div class="text-gray-400">
+          <i class="fas fa-film text-2xl text-purple-400 mb-2"></i>
+          <p class="text-xs">Discover Movies</p>
+        </div>
+        <div class="text-gray-400">
+          <i class="fas fa-star text-2xl text-purple-400 mb-2"></i>
+          <p class="text-xs">Rate & Review</p>
+        </div>
+        <div class="text-gray-400">
+          <i class="fas fa-users text-2xl text-purple-400 mb-2"></i>
+          <p class="text-xs">Join Community</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function togglePassword() {
+        const passwordField = document.getElementById("password");
+        const eyeIcon = document.getElementById("eyeIcon");
+
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          eyeIcon.classList.remove("fa-eye");
+          eyeIcon.classList.add("fa-eye-slash");
+        } else {
+          passwordField.type = "password";
+          eyeIcon.classList.remove("fa-eye-slash");
+          eyeIcon.classList.add("fa-eye");
+        }
+      }
+
+      // Add some floating animation to the background
+      document.addEventListener("DOMContentLoaded", function () {
+        const bg = document.querySelector(".gradient-bg");
+        setInterval(() => {
+          bg.style.transform = `rotate(${
+            Math.sin(Date.now() / 5000) * 5
+          }deg) scale(${1 + Math.sin(Date.now() / 3000) * 0.1})`;
+        }, 100);
+      });
+    </script>
   </body>
 </html>

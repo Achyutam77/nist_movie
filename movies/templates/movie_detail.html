@@ -1,0 +1,228 @@
+{% extends "base.html" %} {% block title %} {{ movie.title }} - MovieHub
+{%endblock title %} {% block content %}
+<!-- Movie Hero Section -->
+<div class="relative">
+  {% if movie.cover_image_url %}
+  <div
+    class="h-96 bg-cover bg-center movie-hero"
+    style="background-image: url('{{ movie.cover_image_url }}');"
+  >
+    {% else %}
+    <div
+      class="h-96 bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 movie-hero"
+    >
+      {% endif %}
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent"
+      >
+        <div
+          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-end pb-8"
+        >
+          <div class="text-white">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">
+              {{ movie.title }}
+            </h1>
+            <div class="flex flex-wrap items-center space-x-6 text-lg">
+              <span class="flex items-center">
+                <i class="fas fa-calendar text-purple-400 mr-2"></i>
+                {{ movie.release_year }}
+              </span>
+              <span class="flex items-center">
+                <i class="fas fa-clock text-purple-400 mr-2"></i>
+                {{ movie.duration_minutes }} minutes
+              </span>
+              <span class="bg-purple-600 px-3 py-1 rounded-full text-sm"
+                >{{ movie.genre.name }}</span
+              >
+              <span class="text-gray-300 uppercase text-sm"
+                >{{ movie.language }}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movie Details -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <!-- Main Content -->
+      <div class="lg:col-span-2">
+        <!-- Description -->
+        <div class="mb-8">
+          <h2 class="text-2xl font-bold text-white mb-4">Overview</h2>
+          <p class="text-gray-300 leading-relaxed text-lg">
+            {{ movie.description }}
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-4 mb-8">
+          {% if movie.trailer_url %}
+          <a
+            href="{{ movie.trailer_url }}"
+            target="_blank"
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+          >
+            <i class="fas fa-play mr-2"></i> Watch Trailer
+          </a>
+          {% endif %} {% if movie.video_url %}
+          <a
+            href="{{ movie.video_url }}"
+            target="_blank"
+            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+          >
+            <i class="fas fa-film mr-2"></i> Watch Movie
+          </a>
+          {% endif %}
+
+          <button
+            class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+          >
+            <i class="fas fa-heart mr-2"></i> Add to Favorites
+          </button>
+
+          <a
+            href="{% url 'movie_update' movie.pk %}"
+            class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+          >
+            <i class="fas fa-edit mr-2"></i> Edit Movie
+          </a>
+
+          <a
+            href="{% url 'movie_delete' movie.pk %}"
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+            onclick="return confirm('Are you sure you want to delete this movie?')"
+          >
+            <i class="fas fa-trash mr-2"></i> Delete Movie
+          </a>
+        </div>
+
+        <!-- Rating Section -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-xl font-bold text-white mb-4">Rate This Movie</h3>
+          <div class="flex items-center space-x-2 mb-4">
+            <div class="flex space-x-1">
+              {% for i in "12345" %}
+              <button
+                class="text-2xl text-gray-400 hover:text-yellow-400 transition duration-300"
+              >
+                <i class="fas fa-star"></i>
+              </button>
+              {% endfor %}
+            </div>
+            <span class="text-gray-400 ml-2">Click to rate</span>
+          </div>
+
+          <div class="mt-4">
+            <textarea
+              placeholder="Write your review..."
+              class="w-full bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none h-24"
+            ></textarea>
+            <button
+              class="mt-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300"
+            >
+              Submit Review
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="lg:col-span-1">
+        <!-- Movie Poster -->
+        <div class="mb-8">
+          {% if movie.cover_image_url %}
+          <img
+            src="{{ movie.cover_image_url }}"
+            alt="{{ movie.title }}"
+            class="w-full rounded-xl shadow-2xl"
+          />
+          {% else %}
+          <div
+            class="w-full h-96 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center"
+          >
+            <i class="fas fa-film text-6xl text-white"></i>
+          </div>
+          {% endif %}
+        </div>
+
+        <!-- Movie Info -->
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-xl font-bold text-white mb-4">Movie Details</h3>
+
+          <div class="space-y-3">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Genre:</span>
+              <span class="text-white">{{ movie.genre.name }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-400">Release Year:</span>
+              <span class="text-white">{{ movie.release_year }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-400">Duration:</span>
+              <span class="text-white">{{ movie.duration_minutes }} min</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-400">Language:</span>
+              <span class="text-white">{{ movie.get_language_display }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-400">Added:</span>
+              <span class="text-white"
+                >{{ movie.created_at|date:"M d, Y" }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-6 space-y-3">
+          <button
+            class="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-medium transition duration-300 flex items-center justify-center"
+          >
+            <i class="fas fa-bookmark mr-2"></i> Add to Watchlist
+          </button>
+
+          <button
+            class="w-full bg-gray-600 hover:bg-gray-700 text-white py-3 rounded-lg font-medium transition duration-300 flex items-center justify-center"
+          >
+            <i class="fas fa-share mr-2"></i> Share Movie
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Similar Movies Section -->
+  <div class="bg-gray-800/50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-white mb-8">You Might Also Like</h2>
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
+        <!-- Placeholder for similar movies -->
+        {% for i in "1234" %}
+        <div class="bg-gray-800 rounded-xl overflow-hidden shadow-xl">
+          <div
+            class="h-48 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center"
+          >
+            <i class="fas fa-film text-3xl text-white"></i>
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold text-white mb-2">Related Movie {{ i }}</h3>
+            <p class="text-gray-400 text-sm">Similar genre and style</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endblock content %}
+</div>

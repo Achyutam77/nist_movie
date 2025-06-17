@@ -1,0 +1,184 @@
+{% extends "base.html" %} {% block title %} Delete Movie - MovieHub {% endblock title %} {% block content %}
+<div class="min-h-screen py-12 flex items-center justify-center">
+  <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Warning Card -->
+    <div class="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-red-600 to-red-700 px-8 py-6">
+        <div class="flex items-center">
+          <div class="bg-white/20 p-3 rounded-full mr-4">
+            <i class="fas fa-exclamation-triangle text-2xl text-white"></i>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-white">Confirm Deletion</h1>
+            <p class="text-red-100">This action cannot be undone</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-8">
+        <div class="text-center mb-8">
+          <div
+            class="mx-auto w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mb-4"
+          >
+            <i class="fas fa-trash text-3xl text-red-600"></i>
+          </div>
+          <h2 class="text-xl font-semibold text-white mb-2">
+            Delete "{{ movie.title }}"?
+          </h2>
+          <p class="text-gray-400">
+            Are you sure you want to permanently delete this movie from your
+            collection? This action cannot be undone and all associated data
+            will be lost.
+          </p>
+        </div>
+
+        <!-- Movie Info Card -->
+        <div class="bg-gray-700/50 rounded-xl p-6 mb-8">
+          <div class="flex items-center space-x-4">
+            {% if movie.cover_image_url %}
+            <img
+              src="{{ movie.cover_image_url }}"
+              alt="{{ movie.title }}"
+              class="w-16 h-24 object-cover rounded-lg"
+            />
+            {% else %}
+            <div
+              class="w-16 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center"
+            >
+              <i class="fas fa-film text-white text-xl"></i>
+            </div>
+            {% endif %}
+
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-white mb-1">
+                {{ movie.title }}
+              </h3>
+              <div class="text-sm text-gray-400 space-y-1">
+                <div>
+                  <i class="fas fa-calendar mr-2"></i>{{ movie.release_year }}
+                </div>
+                <div>
+                  <i class="fas fa-tags mr-2"></i>{{ movie.genre.name }}
+                </div>
+                <div>
+                  <i class="fas fa-clock mr-2"></i>{{ movie.duration_minutes }}
+                  minutes
+                </div>
+                <div>
+                  <i class="fas fa-globe mr-2"></i>{{ movie.get_language_display
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Warning Message -->
+        <div
+          class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-8"
+        >
+          <div class="flex items-start">
+            <i
+              class="fas fa-exclamation-triangle text-yellow-400 mt-1 mr-3"
+            ></i>
+            <div>
+              <h4 class="text-yellow-400 font-semibold mb-1">Warning</h4>
+              <p class="text-yellow-200 text-sm">
+                Deleting this movie will permanently remove:
+              </p>
+              <ul class="text-yellow-200 text-sm mt-2 space-y-1">
+                <li>• Movie information and metadata</li>
+                <li>• All user ratings and reviews</li>
+                <li>• Watchlist entries</li>
+                <li>• Any associated recommendations</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <form method="post" class="space-y-4">
+          {% csrf_token %}
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <!-- Cancel Button -->
+            <a
+              href="{% url 'movie_detail' movie.pk %}"
+              class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center"
+            >
+              <i class="fas fa-arrow-left mr-2"></i>
+              Cancel
+            </a>
+
+            <!-- Delete Button -->
+            <button
+              type="submit"
+              class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center"
+              onclick="return confirm('Are you absolutely sure? This action cannot be undone!')"
+            >
+              <i class="fas fa-trash mr-2"></i>
+              Yes, Delete Forever
+            </button>
+          </div>
+        </form>
+
+        <!-- Alternative Actions -->
+        <div class="mt-6 pt-6 border-t border-gray-700">
+          <p class="text-gray-400 text-sm text-center mb-4">
+            Instead of deleting, you might want to:
+          </p>
+          <div class="flex flex-wrap justify-center gap-3">
+            <a
+              href="{% url 'movie_update' movie.pk %}"
+              class="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 px-4 py-2 rounded-lg text-sm transition duration-300 flex items-center"
+            >
+              <i class="fas fa-edit mr-2"></i> Edit Movie
+            </a>
+            <button
+              class="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 px-4 py-2 rounded-lg text-sm transition duration-300 flex items-center"
+            >
+              <i class="fas fa-archive mr-2"></i> Archive Instead
+            </button>
+            <button
+              class="bg-yellow-600/20 hover:bg-yellow-600/30 text-yellow-300 px-4 py-2 rounded-lg text-sm transition duration-300 flex items-center"
+            >
+              <i class="fas fa-eye-slash mr-2"></i> Make Private
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Additional Confirmation Modal (Optional) -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const deleteForm = document.querySelector('form[method="post"]');
+
+    deleteForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // Create custom confirmation modal
+      const isConfirmed = confirm(
+        `⚠️ FINAL WARNING ⚠️\n\nYou are about to permanently delete "${movieTitle}".\n\nThis action will:\n• Remove all movie data\n• Delete all user reviews\n• Remove from all watchlists\n• Cannot be undone\n\nType "DELETE" to confirm:`
+      );
+
+      if (isConfirmed) {
+        const userInput = prompt('Please type "DELETE" to confirm:');
+        if (userInput === "DELETE") {
+          // Allow form submission
+          this.submit();
+        } else {
+          alert('Deletion cancelled. The text did not match "DELETE".');
+        }
+      }
+    });
+  });
+
+  // Pass movie title to JavaScript
+  const movieTitle = "{{ movie.title|escapejs }}";
+</script>
+{% endblock content %}

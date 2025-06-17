@@ -1,8 +1,517 @@
-<h1>THIS IS MY HOME PAGE</h1>
+{% extends "base.html" %} {% block title %} MovieHub - Discover Amazing Movies
+{% endblock title %} {% block content %}
+<!-- Hero Section with Featured Movie Carousel -->
+<div class="relative overflow-hidden">
+  <!-- Background Carousel -->
+  <div class="hero-carousel relative h-96 md:h-[500px]">
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-purple-900/90 via-blue-900/80 to-pink-900/90"
+    ></div>
+    <div
+      class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"
+    ></div>
 
-<h2>Welcome,{{user.username}}</h2>
+    <!-- Hero Content -->
+    <div class="relative z-10 h-full flex items-center">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div class="max-w-3xl">
+          <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white">
+            Discover Your Next
+            <span
+              class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400"
+            >
+              Favorite Movie
+            </span>
+          </h1>
+          {% if user.is_authenticated %}
+          <p class="text-xl text-gray-200 mb-8">
+            Welcome back, {{ user.username }}! Ready to explore the world of
+            cinema?
+          </p>
+          {% else %}
+          <p class="text-xl text-gray-200 mb-8">
+            Join millions of movie lovers. Rate, review, and discover amazing
+            films.
+          </p>
+          {% endif %}
 
-{% for movie in movies %}
-<div>{{movie.title}}</div>
+          <!-- Enhanced Search Bar -->
+          <div class="max-w-2xl relative mb-8">
+            <div class="flex">
+              <div class="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="Search movies, actors, directors, genres..."
+                  class="w-full py-4 px-6 pl-14 bg-white/10 backdrop-blur-md border border-white/20 rounded-l-full text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <i
+                  class="fas fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-300"
+                ></i>
+              </div>
+              <button
+                class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-r-full font-medium transition duration-300"
+              >
+                Search
+              </button>
+            </div>
 
-{% endfor %}
+            <!-- Quick Search Tags -->
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="text-sm text-gray-300">Popular:</span>
+
+              {% for genre in genres %}
+
+              <button
+                class="bg-white/10 hover:bg-white/20 text-white text-sm px-3 py-1 rounded-full transition duration-300"
+              >
+                {{genre.name}}
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Hero Action Buttons -->
+          <div class="flex flex-wrap gap-4">
+            <a
+              href="{% url 'create_movie' %}"
+              class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+            >
+              <i class="fas fa-plus mr-2"></i> Add Movie
+            </a>
+            <button
+              class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-3 rounded-lg font-medium transition duration-300 flex items-center"
+            >
+              <i class="fas fa-play mr-2"></i> Watch Trailer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Featured Categories -->
+<div class="bg-gray-800/50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-white mb-8 text-center">
+      Browse by Category
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <a
+        href="#"
+        class="group bg-gradient-to-br from-red-500 to-red-700 rounded-xl p-6 text-center hover:scale-105 transition duration-300"
+      >
+        <i
+          class="fas fa-fist-raised text-3xl text-white mb-3 group-hover:scale-110 transition duration-300"
+        ></i>
+        <h3 class="text-white font-semibold">Action</h3>
+      </a>
+      <a
+        href="#"
+        class="group bg-gradient-to-br from-yellow-500 to-orange-600 rounded-xl p-6 text-center hover:scale-105 transition duration-300"
+      >
+        <i
+          class="fas fa-laugh text-3xl text-white mb-3 group-hover:scale-110 transition duration-300"
+        ></i>
+        <h3 class="text-white font-semibold">Comedy</h3>
+      </a>
+      <a
+        href="#"
+        class="group bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl p-6 text-center hover:scale-105 transition duration-300"
+      >
+        <i
+          class="fas fa-heart text-3xl text-white mb-3 group-hover:scale-110 transition duration-300"
+        ></i>
+        <h3 class="text-white font-semibold">Romance</h3>
+      </a>
+      <a
+        href="#"
+        class="group bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-6 text-center hover:scale-105 transition duration-300"
+      >
+        <i
+          class="fas fa-rocket text-3xl text-white mb-3 group-hover:scale-110 transition duration-300"
+        ></i>
+        <h3 class="text-white font-semibold">Sci-Fi</h3>
+      </a>
+      <a
+        href="#"
+        class="group bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl p-6 text-center hover:scale-105 transition duration-300"
+      >
+        <i
+          class="fas fa-ghost text-3xl text-white mb-3 group-hover:scale-110 transition duration-300"
+        ></i>
+        <h3 class="text-white font-semibold">Horror</h3>
+      </a>
+      <a
+        href="#"
+        class="group bg-gradient-to-br from-green-500 to-teal-600 rounded-xl p-6 text-center hover:scale-105 transition duration-300"
+      >
+        <i
+          class="fas fa-child text-3xl text-white mb-3 group-hover:scale-110 transition duration-300"
+        ></i>
+        <h3 class="text-white font-semibold">Family</h3>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Movies Section -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <!-- Section Header -->
+  <div
+    class="flex flex-col md:flex-row md:justify-between md:items-center mb-8"
+  >
+    <div>
+      <h2 class="text-3xl font-bold text-white mb-2">Featured Movies</h2>
+      <p class="text-gray-400">Discover the latest and greatest films</p>
+    </div>
+    <div class="flex items-center space-x-4 mt-4 md:mt-0">
+      <!-- Filter Dropdown -->
+      <div class="relative">
+        <select
+          class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+          <option>All Genres</option>
+          <option>Action</option>
+          <option>Comedy</option>
+          <option>Drama</option>
+          <option>Horror</option>
+        </select>
+      </div>
+
+      <!-- Sort Dropdown -->
+      <div class="relative">
+        <select
+          class="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+        >
+          <option>Latest</option>
+          <option>Popularity</option>
+          <option>Rating</option>
+          <option>Release Date</option>
+        </select>
+      </div>
+
+      <a
+        href="{% url 'create_movie' %}"
+        class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition duration-300 flex items-center"
+      >
+        <i class="fas fa-plus mr-2"></i> Add Movie
+      </a>
+    </div>
+  </div>
+
+  {% if movies %}
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+  >
+    {% for movie in movies %}
+    <div
+      class="movie-card bg-gray-800 rounded-xl overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl"
+    >
+      <div class="relative group">
+        {% if movie.cover_image_url %}
+        <img
+          src="{{ movie.cover_image_url }}"
+          alt="{{ movie.title }}"
+          class="w-full h-72 object-cover group-hover:scale-105 transition duration-300"
+        />
+        {% else %}
+        <div
+          class="w-full h-72 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center"
+        >
+          <i class="fas fa-film text-4xl text-white"></i>
+        </div>
+        {% endif %}
+
+        <!-- Overlay on hover -->
+        <div
+          class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center"
+        >
+          <div class="flex space-x-2">
+            <a
+              href="{% url 'movie_detail' movie.pk %}"
+              class="bg-white/20 backdrop-blur-sm text-white px-3 py-2 rounded-lg hover:bg-white/30 transition duration-300 text-sm"
+              title="View Details"
+            >
+              <i class="fas fa-eye"></i>
+            </a>
+            <a
+              href="{% url 'movie_update' movie.pk %}"
+              class="bg-blue-500/80 backdrop-blur-sm text-white px-3 py-2 rounded-lg hover:bg-blue-600/80 transition duration-300 text-sm"
+              title="Edit Movie"
+            >
+              <i class="fas fa-edit"></i>
+            </a>
+            <a
+              href="{% url 'movie_delete' movie.pk %}"
+              class="bg-red-500/80 backdrop-blur-sm text-white px-3 py-2 rounded-lg hover:bg-red-600/80 transition duration-300 text-sm"
+              title="Delete Movie"
+              onclick="return confirm('Are you sure you want to delete {{ movie.title }}?')"
+            >
+              <i class="fas fa-trash"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4">
+        <h3 class="font-semibold text-lg mb-2 text-white truncate">
+          {{ movie.title }}
+        </h3>
+        <div
+          class="flex items-center justify-between text-sm text-gray-400 mb-2"
+        >
+          <span class="flex items-center">
+            <i class="fas fa-calendar mr-1"></i> {{ movie.release_year }}
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-clock mr-1"></i> {{ movie.duration_minutes }}m
+          </span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="bg-purple-600 text-white text-xs px-2 py-1 rounded-full"
+            >{{ movie.genre.name }}</span
+          >
+          <span class="text-xs text-gray-400 uppercase"
+            >{{ movie.language }}</span
+          >
+        </div>
+        <p class="text-gray-400 text-sm mt-2 line-clamp-2">
+          {{ movie.description|truncatewords:15 }}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <!-- Empty state -->
+  <div class="text-center py-16">
+    <i class="fas fa-film text-6xl text-gray-600 mb-4"></i>
+    <h3 class="text-xl font-semibold text-gray-400 mb-2">No movies yet</h3>
+    <p class="text-gray-500 mb-6">
+      Be the first to add a movie to our collection!
+    </p>
+    <a
+      href="{% url 'create_movie' %}"
+      class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300 inline-flex items-center"
+    >
+      <i class="fas fa-plus mr-2"></i> Add Your First Movie
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Stats Section -->
+<div class="bg-gray-800/50 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+      <div class="group">
+        <div
+          class="text-4xl font-bold text-purple-400 mb-2 group-hover:scale-110 transition duration-300"
+        >
+          {{ movies|length }}
+        </div>
+        <div class="text-gray-400">Movies Available</div>
+        <div class="text-xs text-gray-500 mt-1">In our collection</div>
+      </div>
+      <div class="group">
+        <div
+          class="text-4xl font-bold text-purple-400 mb-2 group-hover:scale-110 transition duration-300"
+        >
+          4.8
+        </div>
+        <div class="text-gray-400">Average Rating</div>
+        <div class="text-xs text-gray-500 mt-1">User satisfaction</div>
+      </div>
+      <div class="group">
+        <div
+          class="text-4xl font-bold text-purple-400 mb-2 group-hover:scale-110 transition duration-300"
+        >
+          12K+
+        </div>
+        <div class="text-gray-400">Active Users</div>
+        <div class="text-xs text-gray-500 mt-1">Movie enthusiasts</div>
+      </div>
+      <div class="group">
+        <div
+          class="text-4xl font-bold text-purple-400 mb-2 group-hover:scale-110 transition duration-300"
+        >
+          50K+
+        </div>
+        <div class="text-gray-400">Reviews</div>
+        <div class="text-xs text-gray-500 mt-1">Community feedback</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Trending Section -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="text-3xl font-bold text-white mb-2">Trending Now</h2>
+      <p class="text-gray-400">What everyone's watching this week</p>
+    </div>
+    <a
+      href="#"
+      class="text-purple-400 hover:text-purple-300 font-medium transition duration-300"
+    >
+      View All <i class="fas fa-arrow-right ml-1"></i>
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for movie in trending_movie %}
+    <div
+      class="bg-gray-800 rounded-xl overflow-hidden group hover:scale-105 transition duration-300"
+    >
+      <div class="relative">
+        {% if movie.cover_image_url %}
+        <img
+          src="{{ movie.cover_image_url }}"
+          alt="{{ movie.title }}"
+          class="w-full h-48 object-cover group-hover:scale-105 transition duration-300"
+        />
+        {% else %}
+        <div
+          class="h-48 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center"
+        >
+          <i class="fas fa-film text-3xl text-white"></i>
+        </div>
+        {% endif %}
+        <div
+          class="absolute top-3 left-3 bg-red-600 text-white text-xs px-2 py-1 rounded-full"
+        >
+          #{{ forloop.counter }} Trending
+        </div>
+        <div
+          class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition duration-300"
+        ></div>
+      </div>
+      <div class="p-4">
+        <h3 class="text-white font-semibold mb-2">{{ movie.title }}</h3>
+        <p class="text-gray-400 text-sm mb-3">{{movie.description}}</p>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <div class="flex text-yellow-400">
+              {% for star in "12345" %}
+              <i class="fas fa-star text-sm"></i>
+              {% endfor %}
+            </div>
+            <span class="text-gray-400 text-sm">4.8</span>
+          </div>
+          <span class="text-purple-400 text-sm">+25% views</span>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="bg-gradient-to-r from-purple-900/20 to-pink-900/20 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-4">Why Choose MovieHub?</h2>
+      <p class="text-gray-400 text-lg">
+        Experience the ultimate movie discovery platform
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="text-center group">
+        <div
+          class="bg-purple-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-purple-600/30 transition duration-300"
+        >
+          <i class="fas fa-search text-2xl text-purple-400"></i>
+        </div>
+        <h3 class="text-white font-semibold mb-2">Smart Discovery</h3>
+        <p class="text-gray-400 text-sm">
+          Find your perfect movie with our intelligent recommendation engine
+        </p>
+      </div>
+
+      <div class="text-center group">
+        <div
+          class="bg-blue-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-600/30 transition duration-300"
+        >
+          <i class="fas fa-users text-2xl text-blue-400"></i>
+        </div>
+        <h3 class="text-white font-semibold mb-2">Community Reviews</h3>
+        <p class="text-gray-400 text-sm">
+          Read authentic reviews from fellow movie enthusiasts
+        </p>
+      </div>
+
+      <div class="text-center group">
+        <div
+          class="bg-green-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-green-600/30 transition duration-300"
+        >
+          <i class="fas fa-star text-2xl text-green-400"></i>
+        </div>
+        <h3 class="text-white font-semibold mb-2">Personal Ratings</h3>
+        <p class="text-gray-400 text-sm">
+          Rate and track your favorite movies with our rating system
+        </p>
+      </div>
+
+      <div class="text-center group">
+        <div
+          class="bg-pink-600/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-pink-600/30 transition duration-300"
+        >
+          <i class="fas fa-bookmark text-2xl text-pink-400"></i>
+        </div>
+        <h3 class="text-white font-semibold mb-2">Custom Lists</h3>
+        <p class="text-gray-400 text-sm">
+          Create personalized watchlists and share them with friends
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Call to Action Section -->
+<div class="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+        Ready to Start Your Movie Journey?
+      </h2>
+      <p class="text-purple-100 text-lg mb-8">
+        Join thousands of movie lovers and discover your next favorite film
+        today
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        {% if not user.is_authenticated %}
+        <a
+          href="#"
+          class="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition duration-300 flex items-center justify-center"
+        >
+          <i class="fas fa-user-plus mr-2"></i> Sign Up Free
+        </a>
+        <a
+          href="#"
+          class="bg-purple-700 hover:bg-purple-800 text-white px-8 py-3 rounded-lg font-semibold transition duration-300 flex items-center justify-center"
+        >
+          <i class="fas fa-sign-in-alt mr-2"></i> Sign In
+        </a>
+        {% else %}
+        <a
+          href="{% url 'create_movie' %}"
+          class="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition duration-300 flex items-center justify-center"
+        >
+          <i class="fas fa-plus mr-2"></i> Add Your First Movie
+        </a>
+        <a
+          href="#"
+          class="bg-purple-700 hover:bg-purple-800 text-white px-8 py-3 rounded-lg font-semibold transition duration-300 flex items-center justify-center"
+        >
+          <i class="fas fa-star mr-2"></i> Rate Movies
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

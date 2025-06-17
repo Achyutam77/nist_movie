@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}MovieHub - Your Ultimate Movie Destination{% endblock title %}
+    </title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .movie-card:hover {
+        transform: translateY(-8px);
+      }
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .movie-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+      }
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+      .mobile-menu {
+        display: none;
+      }
+      .mobile-menu.active {
+        display: block;
+      }
+      .nav-glassmorphism {
+        background: rgba(17, 25, 40, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .search-dropdown {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-slideDown {
+        animation: slideDown 0.3s ease-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-white min-h-screen">
+    <!-- Advanced Navigation -->
+    <nav
+      class="nav-glassmorphism fixed w-full top-0 z-50 transition-all duration-300"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo Section -->
+          <div class="flex items-center space-x-8">
+            <a
+              href="{% url 'home' %}"
+              class="flex items-center space-x-2 group"
+            >
+              <i
+                class="fas fa-film text-2xl text-purple-500 group-hover:text-purple-400 transition duration-300"
+              ></i>
+              <span
+                class="text-xl font-bold text-white group-hover:text-purple-300 transition duration-300"
+                >MovieHub</span
+              >
+            </a>
+
+            <!-- Main Navigation Links (Desktop) -->
+            <div class="hidden md:flex items-center space-x-1">
+              <a
+                href="{% url 'home' %}"
+                class="text-gray-300 hover:text-white hover:bg-gray-700/50 px-3 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+              >
+                <i class="fas fa-home mr-2"></i> Home
+              </a>
+
+              <!-- Movies Dropdown -->
+              <div class="relative dropdown group">
+                <button
+                  class="text-gray-300 hover:text-white hover:bg-gray-700/50 px-3 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+                >
+                  <i class="fas fa-film mr-2"></i> Movies
+                  <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                </button>
+                <div
+                  class="dropdown-content absolute left-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 animate-slideDown hidden group-hover:block"
+                >
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300 rounded-t-lg"
+                  >
+                    <i class="fas fa-fire mr-2 text-red-400"></i> Trending
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300"
+                  >
+                    <i class="fas fa-star mr-2 text-yellow-400"></i> Top Rated
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300"
+                  >
+                    <i class="fas fa-clock mr-2 text-blue-400"></i> Latest
+                    Releases
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300"
+                  >
+                    <i class="fas fa-award mr-2 text-purple-400"></i> Award
+                    Winners
+                  </a>
+                  <a
+                    href="{% url 'create_movie' %}"
+                    class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300 rounded-b-lg"
+                  >
+                    <i class="fas fa-plus mr-2 text-green-400"></i> Add Movie
+                  </a>
+                </div>
+              </div>
+
+              <!-- Genres Dropdown -->
+              <div class="relative dropdown group">
+                <button
+                  class="text-gray-300 hover:text-white hover:bg-gray-700/50 px-3 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+                >
+                  <i class="fas fa-tags mr-2"></i> Genres
+                  <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                </button>
+                <div
+                  class="dropdown-content absolute left-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-xl border border-gray-700 animate-slideDown hidden group-hover:block"
+                >
+                  <div class="grid grid-cols-2 gap-1 p-2">
+                    {% for genre in genres %}
+                    <a
+                      href="#"
+                      class="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300 rounded"
+                      >{{genre.name}}</a
+                    >
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href="#"
+                class="text-gray-300 hover:text-white hover:bg-gray-700/50 px-3 py-2 rounded-lg text-sm font-medium transition duration-300 flex items-center"
+              >
+                <i class="fas fa-list mr-2"></i> My Lists
+              </a>
+            </div>
+          </div>
+
+          <!-- Search Bar -->
+          <div class="hidden md:flex flex-1 max-w-lg mx-8">
+            <div class="relative w-full">
+              <input
+                type="text"
+                placeholder="Search movies, actors, directors..."
+                class="w-full bg-gray-700/50 border border-gray-600 rounded-full px-4 py-2 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                id="globalSearch"
+              />
+              <i
+                class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              ></i>
+
+              <!-- Search Dropdown Results -->
+              <div
+                class="search-dropdown absolute top-full left-0 right-0 mt-2 bg-gray-800 rounded-lg shadow-xl border border-gray-700 hidden"
+                id="searchResults"
+              >
+                <div class="p-4">
+                  <div
+                    class="text-xs text-gray-400 uppercase tracking-wide mb-2"
+                  >
+                    Recent Searches
+                  </div>
+                  <div class="space-y-2">
+                    <a
+                      href="#"
+                      class="block p-2 hover:bg-gray-700 rounded-lg transition duration-300"
+                    >
+                      <div class="flex items-center space-x-3">
+                        <i class="fas fa-clock text-gray-400"></i>
+                        <span class="text-gray-300">The Dark Knight</span>
+                      </div>
+                    </a>
+                    <a
+                      href="#"
+                      class="block p-2 hover:bg-gray-700 rounded-lg transition duration-300"
+                    >
+                      <div class="flex items-center space-x-3">
+                        <i class="fas fa-clock text-gray-400"></i>
+                        <span class="text-gray-300">Inception</span>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side Actions -->
+          <div class="flex items-center space-x-4">
+            <!-- Notifications -->
+            <button
+              class="hidden md:block relative text-gray-300 hover:text-white transition duration-300"
+            >
+              <i class="fas fa-bell text-lg"></i>
+              <span
+                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center"
+                >3</span
+              >
+            </button>
+
+            <!-- Watchlist -->
+            <button
+              class="hidden md:block text-gray-300 hover:text-white transition duration-300"
+            >
+              <i class="fas fa-bookmark text-lg"></i>
+            </button>
+
+            <!-- User Menu -->
+            {% if user.is_authenticated %}
+            <div class="relative dropdown group">
+              <button
+                class="flex items-center space-x-2 text-gray-300 hover:text-white transition duration-300"
+              >
+                <div
+                  class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center"
+                >
+                  <i class="fas fa-user text-sm"></i>
+                </div>
+                <span class="hidden md:block">{{ user.username }}</span>
+                <i class="fas fa-chevron-down text-xs"></i>
+              </button>
+              <div
+                class="dropdown-content absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-xl border border-gray-700 animate-slideDown hidden group-hover:block"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300 rounded-t-lg"
+                >
+                  <i class="fas fa-user mr-2"></i> Profile
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300"
+                >
+                  <i class="fas fa-cog mr-2"></i> Settings
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300"
+                >
+                  <i class="fas fa-history mr-2"></i> Watch History
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300"
+                >
+                  <i class="fas fa-heart mr-2"></i> Favorites
+                </a>
+                <hr class="border-gray-700 my-1" />
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition duration-300 rounded-b-lg"
+                >
+                  <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+              </div>
+            </div>
+            {% else %}
+            <a
+              href="#"
+              class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-300"
+            >
+              <i class="fas fa-sign-in-alt mr-2"></i> Login
+            </a>
+            {% endif %}
+
+            <!-- Mobile Menu Button -->
+            <button
+              class="md:hidden text-gray-300 hover:text-white transition duration-300"
+              onclick="toggleMobileMenu()"
+            >
+              <i class="fas fa-bars text-lg"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        class="mobile-menu md:hidden bg-gray-800/95 backdrop-blur-lg border-t border-gray-700"
+        id="mobileMenu"
+      >
+        <div class="px-4 py-4 space-y-3">
+          <!-- Mobile Search -->
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search movies..."
+              class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+            <i
+              class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            ></i>
+          </div>
+
+          <!-- Mobile Navigation Links -->
+          <a
+            href="{% url 'home' %}"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-home mr-3"></i> Home
+          </a>
+          <a
+            href="#"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-fire mr-3"></i> Trending
+          </a>
+          <a
+            href="#"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-star mr-3"></i> Top Rated
+          </a>
+          <a
+            href="#"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-tags mr-3"></i> Genres
+          </a>
+          <a
+            href="#"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-list mr-3"></i> My Lists
+          </a>
+          <a
+            href="{% url 'create_movie' %}"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-plus mr-3"></i> Add Movie
+          </a>
+
+          {% if user.is_authenticated %}
+          <hr class="border-gray-700 my-3" />
+          <a
+            href="#"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-user mr-3"></i> Profile
+          </a>
+          <a
+            href="#"
+            class="block text-gray-300 hover:text-white hover:bg-gray-700 px-3 py-2 rounded-lg transition duration-300"
+          >
+            <i class="fas fa-sign-out-alt mr-3"></i> Logout
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <!-- Spacer for fixed navbar -->
+    <div class="h-16"></div>
+
+    <!-- Main Content -->
+    <main>{% block content %} {% endblock content %}</main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 mt-16">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <!-- Main Footer Content -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+          <!-- Company Info -->
+          <div class="md:col-span-1">
+            <div class="flex items-center space-x-2 mb-4">
+              <i class="fas fa-film text-2xl text-purple-500"></i>
+              <span class="text-xl font-bold">MovieHub</span>
+            </div>
+            <p class="text-gray-400 mb-4">
+              Your ultimate destination for movie discovery, reviews, and
+              entertainment.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-400 hover:text-purple-400 transition duration-300"
+              >
+                <i class="fab fa-facebook-f text-lg"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-purple-400 transition duration-300"
+              >
+                <i class="fab fa-twitter text-lg"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-purple-400 transition duration-300"
+              >
+                <i class="fab fa-instagram text-lg"></i>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-purple-400 transition duration-300"
+              >
+                <i class="fab fa-youtube text-lg"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Trending Movies</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Top Rated</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >New Releases</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Coming Soon</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Genres -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Popular Genres</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Action</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Comedy</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Drama</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Sci-Fi</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Horror</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Support</h3>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Help Center</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Contact Us</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Terms of Service</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition duration-300"
+                  >Cookie Policy</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Newsletter Signup -->
+        <div class="bg-gray-700/50 rounded-xl p-6 mb-8">
+          <div
+            class="text-center md:text-left md:flex md:items-center md:justify-between"
+          >
+            <div class="mb-4 md:mb-0">
+              <h3 class="text-xl font-semibold text-white mb-2">
+                Stay Updated
+              </h3>
+              <p class="text-gray-400">
+                Get the latest movie news and recommendations delivered to your
+                inbox.
+              </p>
+            </div>
+            <div class="flex max-w-md mx-auto md:mx-0">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                class="flex-1 bg-gray-600 border border-gray-500 rounded-l-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <button
+                class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-r-lg font-medium transition duration-300"
+              >
+                Subscribe
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-gray-700 pt-8">
+          <div class="md:flex md:items-center md:justify-between">
+            <div class="text-center md:text-left">
+              <p class="text-gray-400">
+                &copy; 2025 MovieHub. All rights reserved.
+              </p>
+            </div>
+            <div
+              class="mt-4 md:mt-0 flex justify-center md:justify-end space-x-6"
+            >
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white text-sm transition duration-300"
+                >Privacy</a
+              >
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white text-sm transition duration-300"
+                >Terms</a
+              >
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white text-sm transition duration-300"
+                >Cookies</a
+              >
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white text-sm transition duration-300"
+                >Help</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- JavaScript for Interactive Features -->
+    <script>
+      // Mobile menu toggle
+      function toggleMobileMenu() {
+        const mobileMenu = document.getElementById("mobileMenu");
+        mobileMenu.classList.toggle("active");
+      }
+
+      // Search functionality
+      document
+        .getElementById("globalSearch")
+        .addEventListener("focus", function () {
+          document.getElementById("searchResults").classList.remove("hidden");
+        });
+
+      document
+        .getElementById("globalSearch")
+        .addEventListener("blur", function () {
+          setTimeout(() => {
+            document.getElementById("searchResults").classList.add("hidden");
+          }, 200);
+        });
+
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Add scroll effect to navbar
+      window.addEventListener("scroll", function () {
+        const nav = document.querySelector("nav");
+        if (window.scrollY > 100) {
+          nav.classList.add("bg-gray-900/95");
+        } else {
+          nav.classList.remove("bg-gray-900/95");
+        }
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener("click", function (event) {
+        const mobileMenu = document.getElementById("mobileMenu");
+        const menuButton = event.target.closest("button");
+
+        if (!mobileMenu.contains(event.target) && !menuButton) {
+          mobileMenu.classList.remove("active");
+        }
+      });
+
+      // Add loading animation for search
+      let searchTimeout;
+      document
+        .getElementById("globalSearch")
+        .addEventListener("input", function () {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(() => {
+            // Here you would typically make an AJAX call to search
+            console.log("Searching for:", this.value);
+          }, 300);
+        });
+    </script>
+  </body>
+</html>

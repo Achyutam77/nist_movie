@@ -1,8 +1,7 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from typing import Any
 
-from django.views import View
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
 from django.views.generic import (
     CreateView,
     DeleteView,
@@ -11,7 +10,7 @@ from django.views.generic import (
     UpdateView,
 )
 
-from .models import Movie
+from .models import Genre, Movie
 
 
 class MovieListView(ListView):
@@ -19,13 +18,43 @@ class MovieListView(ListView):
     template_name = "home.html"
     context_object_name = "movies"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["movies"] = Movie.objects.all()
+        context["trending_movie"] = Movie.objects.filter(is_trending=True)
+        context["genres"] = Genre.objects.all()
+
+        return context
 
 
-class MovieCreateView(CreateView):
+class MovieCreateView(LoginRequiredMixin, CreateView):
+    model = Movie
+    template_name = "create_movies.html"
+    fields = "__all__"
+    # exclude = ["category"]
+    success_url = "/"
+    login_url = "/user/login/"
+
+
+class MovieDetailView(DetailView):
+    model = Movie
+    template_name = "movie_detail.html"
+    context_object_name = "movie"
+
+
+class MovieUpdateView(UpdateView):
     model = Movie
     template_name = "create_movies.html"
     fields = "__all__"
     success_url = "/"
+
+
+class MovieDeleteView(LoginRequiredMixin, DeleteView):
+    model = Movie
+    template_name = "confirm_delete.html"
+    success_url = "/"
+    context_object_name = "movie"
+    login_url = "/user/login/"
 
 
 # from .forms import MovieForm
